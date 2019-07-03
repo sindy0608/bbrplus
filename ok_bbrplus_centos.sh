@@ -37,9 +37,11 @@ fi
 echo -e "切换内核..."
 grub2-set-default 'CentOS Linux (${kernel_version}) 7 (Core)'
 echo -e "启用模块..."
-echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf
-echo "net.ipv4.tcp_congestion_control=bbrplus" >> /etc/sysctl.conf
+chattr -i /etc/sysctl.conf
+sed -i 's/net.ipv4.tcp_congestion_control = bbr/net.ipv4.tcp_congestion_control = bbrplus/g' /etc/sysctl.conf
+chattr +i /etc/sysctl.conf
 rm -f kernel-${kernel_version}.rpm
+
 
 read -p "bbrplus安装完成，现在重启 ? [Y/n] :" yn
 [ -z "${yn}" ] && yn="y"
